@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package greet;
+
+option go_package = "github.com/imind-lab/greet/server/proto/greet";
+
+option php_namespace = "proto\\Greet";
+option php_metadata_namespace = "proto\\GPBMetadata";
+
+import "google/api/annotations.proto";
+
+service GreetService {
+    rpc CreateGreet (CreateGreetRequest) returns (CreateGreetResponse) {
+        option (google.api.http) = {
+           post: "/v1/greet/create"
+           body: "*"
+        };
+    }
+    rpc GetGreetById (GetGreetByIdRequest) returns (GetGreetByIdResponse) {
+        option (google.api.http) = {
+           get: "/v1/greet/one/{id}"
+        };
+    }
+    rpc GetGreetList (GetGreetListRequest) returns (GetGreetListResponse) {
+        option (google.api.http) = {
+           get: "/v1/greet/list/{status}"
+        };
+    }
+    rpc UpdateGreetStatus (UpdateGreetStatusRequest) returns (UpdateGreetStatusResponse) {
+        option (google.api.http) = {
+           post: "/v1/greet/status"
+           body: "*"
+        };
+    }
+    rpc UpdateGreetCount (UpdateGreetCountRequest) returns (UpdateGreetCountResponse) {
+        option (google.api.http) = {
+           post: "/v1/greet/count"
+           body: "*"
+        };
+    }
+    rpc DeleteGreetById (DeleteGreetByIdRequest) returns (DeleteGreetByIdResponse) {
+        option (google.api.http) = {
+           post: "/v1/greet/del"
+           body: "*"
+        };
+    }
+
+    rpc GetGreetListByStream (stream GetGreetListByStreamRequest) returns (stream GetGreetListByStreamResponse);
+}
+
+message CreateGreetRequest {
+    // @inject_tag: validate:"required"
+    Greet dto = 1;
+}
+
+message CreateGreetResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetGreetByIdRequest {
+    int32 id = 1;
+}
+
+message GetGreetByIdResponse {
+    bool success = 1;
+    Greet dto = 2;
+    Error error = 3;
+}
+
+message GetGreetListRequest {
+    // @inject_tag: validate:"gte=0,lte=3"
+    int32 status = 1;
+    int32 lastid = 2;
+    // @inject_tag: validate:"gte=5,lte=20"
+    int32 pagesize = 3;
+    int32 page = 4;
+}
+
+message GetGreetListResponse {
+    bool success = 1;
+    GreetList data = 2;
+    Error error = 3;
+}
+
+message UpdateGreetStatusRequest {
+    int32 id = 1;
+    int32 status = 2;
+}
+
+message UpdateGreetStatusResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message UpdateGreetCountRequest {
+    int32 id = 1;
+    int32 num = 2;
+    string column = 3;
+}
+
+message UpdateGreetCountResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message DeleteGreetByIdRequest {
+    int32 id = 1;
+}
+
+message DeleteGreetByIdResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message Greet {
+    int32 id = 1;
+    // @inject_tag: validate:"required,email"
+    string name = 2;
+    int32 view_num = 3;
+    // @inject_tag: validate:"gte=0,lte=3"
+    int32 status = 4;
+    int64 create_time = 5;
+    string create_datetime = 6;
+    string update_datetime = 7;
+}
+
+message GreetList {
+    int32 total = 1;
+    int32 total_page = 2;
+    int32 cur_page = 3;
+    repeated Greet datalist = 4;
+}
+
+message GetGreetListByStreamRequest {
+    int32 index = 1;
+    int32 id = 2;
+}
+
+message GetGreetListByStreamResponse {
+    int32 index = 1;
+    Greet result = 2;
+}
+
+message Error {
+    int32 code = 1;
+    string message = 2;
+}

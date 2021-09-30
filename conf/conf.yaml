@@ -1,0 +1,59 @@
+service:
+  name: greet
+  port: #监听端口
+    http: 80
+    grpc: 50051
+  profile:
+    rate: 1
+
+db:
+  logMode: 4
+  imind:
+    write:
+      host: 127.0.0.1
+      port: 3306
+      user: root
+      pass: 123456
+      name: mind
+    read:
+      - host: 127.0.0.1
+        port: 3306
+        user: root
+        pass: 123456
+        name: mind
+      - host: 127.0.0.1
+        port: 3306
+        user: root
+        pass: 123456
+        name: mind
+
+redis:
+  addr: '127.0.0.1:6379'
+  db: 0
+
+kafka:
+  business:
+    producer:
+      - '127.0.0.1:9092'
+    consumer:
+      - '127.0.0.1:9092'
+    topic:
+      greetCreate: greet_create
+      greetUpdate: greet_update
+
+tracing:
+  agent: '172.16.50.50:6831'
+  type: const
+  param: 1
+  name:
+    client: imind-greet-cli
+    server: imind-greet-srv
+
+log:
+  path: './logs/ms.log'
+  level: -1
+  age: 7
+  size: 128
+  backup: 30
+  compress: true
+  format: json
