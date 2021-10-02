@@ -3,15 +3,15 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/agiledragon/gomonkey"
+	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redismock/v8"
 	"github.com/imind-lab/greet/pkg/constant"
 	utilx "github.com/imind-lab/greet/pkg/util"
 	"github.com/imind-lab/greet/server/model"
 	"github.com/imind-lab/micro/dao"
 	"github.com/imind-lab/micro/redisx"
-	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/agiledragon/gomonkey"
-	"github.com/go-redis/redis/v8"
-	"github.com/go-redis/redismock/v8"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/driver/mysql"
@@ -58,6 +58,7 @@ func (s *Suite) AfterTest(_, _ string) {
 	require.NoError(s.T(), s.mysqlMock.ExpectationsWereMet())
 	require.NoError(s.T(), s.redisMock.ExpectationsWereMet())
 }
+
 func TestInit(t *testing.T) {
 	suite.Run(t, new(Suite))
 }
