@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/imind-lab/greet/pkg/constant"
+	"github.com/imind-lab/greeter/pkg/constant"
 	"github.com/imind-lab/micro/util"
 )
 

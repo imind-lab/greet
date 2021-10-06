@@ -12,12 +12,12 @@ import (
 	"strconv"
 )
 
-var greets map[string]*greetClient
+var greeters map[string]*greeterClient
 
-var opts = Options{Name: "greet", Tls: true}
+var opts = Options{Name: "greeter", Tls: true}
 
 func init() {
-	greets = make(map[string]*greetClient)
+	greeters = make(map[string]*greeterClient)
 }
 
 type Options struct {
@@ -25,20 +25,20 @@ type Options struct {
 	Tls  bool
 }
 
-func New(ctx context.Context, opt ...Option) (*greetClient, error) {
+func New(ctx context.Context, opt ...Option) (*greeterClient, error) {
 	for _, o := range opt {
 		o(&opts)
 	}
 	key := opts.Name + strconv.FormatBool(opts.Tls)
-	greetClient, ok := greets[key]
+	greeterClient, ok := greeters[key]
 	if !ok {
-		greetClient, err := NewGreetClient(ctx, opts.Name, opts.Tls)
+		greeterClient, err := NewGreeterClient(ctx, opts.Name, opts.Tls)
 		if err == nil {
-			greets[key] = greetClient
+			greeters[key] = greeterClient
 		}
-		return greetClient, err
+		return greeterClient, err
 	}
-	return greetClient, nil
+	return greeterClient, nil
 }
 
 type Option func(*Options)
@@ -56,7 +56,7 @@ func Tls(tls bool) Option {
 }
 
 func Close() {
-	for _, client := range greets {
+	for _, client := range greeters {
 		client.Close()
 	}
 }

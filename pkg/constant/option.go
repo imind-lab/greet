@@ -18,4 +18,4 @@ const DBName = "imind"
 const Realtime = false
 
 const MQName = "business"
-const GreetQueueLen = 32
+const GreeterQueueLen = 32

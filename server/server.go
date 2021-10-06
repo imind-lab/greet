@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
-	"github.com/imind-lab/greet/pkg/constant"
-	"github.com/imind-lab/greet/server/proto/greet"
-	"github.com/imind-lab/greet/server/service"
-	"github.com/imind-lab/greet/server/subscriber"
+	"github.com/imind-lab/greeter/pkg/constant"
+	"github.com/imind-lab/greeter/server/proto/greeter"
+	"github.com/imind-lab/greeter/server/service"
+	"github.com/imind-lab/greeter/server/subscriber"
 	"github.com/imind-lab/micro"
 	"github.com/imind-lab/micro/broker"
 	"github.com/imind-lab/micro/grpcx"
@@ -24,7 +24,7 @@ func Serve() error {
 		return err
 	}
 	// 设置消息队列事件处理器（可选）
-	mqHandler := subscriber.NewGreet(svc.Options().Context)
+	mqHandler := subscriber.NewGreeter(svc.Options().Context)
 	endpoint.Subscribe(
 		broker.Processor{Topic: endpoint.Options().Topics["createuser"], Handler: mqHandler.CreateHandle, Retry: 1},
 		broker.Processor{Topic: endpoint.Options().Topics["updateusercount"], Handler: mqHandler.UpdateCountHandle, Retry: 0},
@@ -38,7 +38,7 @@ func Serve() error {
 		micro.ClientCred(grpcCred.ClientCred()))
 
 	grpcSrv := svc.GrpcServer()
-	greet.RegisterGreetServiceServer(grpcSrv, service.NewGreetService())
+	greeter.RegisterGreeterServiceServer(grpcSrv, service.NewGreeterService())
 
 	// 注册gRPC-Gateway
 	endPoint := fmt.Sprintf(":%d", viper.GetInt("service.port.grpc"))
@@ -46,7 +46,7 @@ func Serve() error {
 
 	mux := svc.ServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(grpcCred.ClientCred())}
-	err = greet.RegisterGreetServiceHandlerFromEndpoint(svc.Options().Context, mux, endPoint, opts)
+	err = greeter.RegisterGreeterServiceHandlerFromEndpoint(svc.Options().Context, mux, endPoint, opts)
 	if err != nil {
 		return err
 	}

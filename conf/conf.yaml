@@ -1,5 +1,5 @@
 service:
-  name: greet
+  name: greeter
   port: #监听端口
     http: 80
     grpc: 50051
@@ -38,16 +38,16 @@ kafka:
     consumer:
       - '127.0.0.1:9092'
     topic:
-      greetCreate: greet_create
-      greetUpdate: greet_update
+      greeterCreate: greeter_create
+      greeterUpdate: greeter_update
 
 tracing:
   agent: '172.16.50.50:6831'
   type: const
   param: 1
   name:
-    client: imind-greet-cli
-    server: imind-greet-srv
+    client: imind-greeter-cli
+    server: imind-greeter-srv
 
 log:
   path: './logs/ms.log'

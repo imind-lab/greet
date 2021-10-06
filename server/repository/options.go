@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-type GreetByIdOptions struct {
+type GreeterByIdOptions struct {
 	randExpire time.Duration
 }
 
-type GreetByIdOption func(*GreetByIdOptions)
+type GreeterByIdOption func(*GreeterByIdOptions)
 
-func GreetByIdRandExpire(expire time.Duration) GreetByIdOption {
-	return func(o *GreetByIdOptions) {
+func GreeterByIdRandExpire(expire time.Duration) GreeterByIdOption {
+	return func(o *GreeterByIdOptions) {
 		o.randExpire = expire
 	}
 }

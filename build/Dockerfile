@@ -7,5 +7,5 @@ RUN apk add --no-cache tzdata \
 
 WORKDIR .
 ADD conf /conf
-ADD build/greet build/grpc-health-probe /bin/
-ENTRYPOINT [ "/bin/greet" ]
+ADD build/greeter build/grpc-health-probe /bin/
+ENTRYPOINT [ "/bin/greeter" ]

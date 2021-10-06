@@ -8,7 +8,7 @@
 package main
 
 import (
-	"github.com/imind-lab/greet/cmd"
+	"github.com/imind-lab/greeter/cmd"
 )
 
 func main() {

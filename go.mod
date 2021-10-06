@@ -1,4 +1,4 @@
-module github.com/imind-lab/greet
+module github.com/imind-lab/greeter
 
 go 1.16
 
