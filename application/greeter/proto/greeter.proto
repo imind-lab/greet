@@ -54,8 +54,7 @@ message CreateGreeterRequest {
 }
 
 message CreateGreeterResponse {
-    bool success = 1;
-    Error error = 2;
+    Error error = 1;
 }
 
 message GetGreeterByIdRequest {
@@ -63,9 +62,8 @@ message GetGreeterByIdRequest {
 }
 
 message GetGreeterByIdResponse {
-    bool success = 1;
+    Error error = 1;
     Greeter dto = 2;
-    Error error = 3;
 }
 
 message GetGreeterListRequest {
@@ -78,9 +76,8 @@ message GetGreeterListRequest {
 }
 
 message GetGreeterListResponse {
-    bool success = 1;
+    Error error = 1;
     GreeterList data = 2;
-    Error error = 3;
 }
 
 message UpdateGreeterStatusRequest {
@@ -89,8 +86,7 @@ message UpdateGreeterStatusRequest {
 }
 
 message UpdateGreeterStatusResponse {
-    bool success = 1;
-    Error error = 2;
+    Error error = 1;
 }
 
 message UpdateGreeterCountRequest {
@@ -100,8 +96,7 @@ message UpdateGreeterCountRequest {
 }
 
 message UpdateGreeterCountResponse {
-    bool success = 1;
-    Error error = 2;
+    Error error = 1;
 }
 
 message DeleteGreeterByIdRequest {
@@ -109,8 +104,7 @@ message DeleteGreeterByIdRequest {
 }
 
 message DeleteGreeterByIdResponse {
-    bool success = 1;
-    Error error = 2;
+    Error error = 1;
 }
 
 message Greeter {

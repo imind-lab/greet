@@ -104,8 +104,6 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 		return rsp, nil
 	}
 
-	rsp.Success = true
-
 	endpoint, err := broker.NewBroker(constant.MQName)
 	if err != nil {
 		ctxzap.Error(ctx, "broker.NewBroker error", zap.Error(err))
@@ -135,7 +133,6 @@ func (svc *GreeterService) GetGreeterById(ctx context.Context, req *greeter.GetG
 		return rsp, nil
 	}
 
-	rsp.Success = true
 	rsp.Dto = m
 	return rsp, nil
 }
@@ -195,7 +192,6 @@ func (svc *GreeterService) GetGreeterList(ctx context.Context, req *greeter.GetG
 		rsp.Error = err
 		return rsp, nil
 	}
-	rsp.Success = true
 	rsp.Data = list
 	return rsp, nil
 }
@@ -214,7 +210,6 @@ func (svc *GreeterService) UpdateGreeterStatus(ctx context.Context, req *greeter
 		rsp.Error = err
 		return rsp, nil
 	}
-	rsp.Success = true
 	return rsp, nil
 }
 
@@ -232,8 +227,6 @@ func (svc *GreeterService) UpdateGreeterCount(ctx context.Context, req *greeter.
 		rsp.Error = err
 		return rsp, nil
 	}
-	rsp.Success = true
-
 	endpoint, err := broker.NewBroker(constant.MQName)
 	if err != nil {
 		ctxzap.Error(ctx, "kafka.New error", zap.Error(err))
@@ -261,7 +254,6 @@ func (svc *GreeterService) DeleteGreeterById(ctx context.Context, req *greeter.D
 		rsp.Error = err
 		return rsp, nil
 	}
-	rsp.Success = true
 	return rsp, nil
 }
 
