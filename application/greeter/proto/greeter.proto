@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package greeter;
+
+option go_package = "github.com/imind-lab/greeter/application/greeter/proto;greeter";
+
+option php_namespace = "proto\\Greeter";
+option php_metadata_namespace = "proto\\GPBMetadata";
+
+import "google/api/annotations.proto";
+
+service GreeterService {
+    rpc CreateGreeter (CreateGreeterRequest) returns (CreateGreeterResponse) {
+        option (google.api.http) = {
+           post: "/v1/greeter/create"
+           body: "*"
+        };
+    }
+    rpc GetGreeterById (GetGreeterByIdRequest) returns (GetGreeterByIdResponse) {
+        option (google.api.http) = {
+           get: "/v1/greeter/one/{id}"
+        };
+    }
+    rpc GetGreeterList (GetGreeterListRequest) returns (GetGreeterListResponse) {
+        option (google.api.http) = {
+           get: "/v1/greeter/list/{status}"
+        };
+    }
+    rpc UpdateGreeterStatus (UpdateGreeterStatusRequest) returns (UpdateGreeterStatusResponse) {
+        option (google.api.http) = {
+           post: "/v1/greeter/status"
+           body: "*"
+        };
+    }
+    rpc UpdateGreeterCount (UpdateGreeterCountRequest) returns (UpdateGreeterCountResponse) {
+        option (google.api.http) = {
+           post: "/v1/greeter/count"
+           body: "*"
+        };
+    }
+    rpc DeleteGreeterById (DeleteGreeterByIdRequest) returns (DeleteGreeterByIdResponse) {
+        option (google.api.http) = {
+           post: "/v1/greeter/del"
+           body: "*"
+        };
+    }
+
+    rpc GetGreeterListByStream (stream GetGreeterListByStreamRequest) returns (stream GetGreeterListByStreamResponse);
+}
+
+message CreateGreeterRequest {
+    // @inject_tag: validate:"required"
+    Greeter dto = 1;
+}
+
+message CreateGreeterResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetGreeterByIdRequest {
+    int32 id = 1;
+}
+
+message GetGreeterByIdResponse {
+    bool success = 1;
+    Greeter dto = 2;
+    Error error = 3;
+}
+
+message GetGreeterListRequest {
+    // @inject_tag: validate:"gte=0,lte=3"
+    int32 status = 1;
+    int32 lastid = 2;
+    // @inject_tag: validate:"gte=5,lte=20"
+    int32 pagesize = 3;
+    int32 page = 4;
+}
+
+message GetGreeterListResponse {
+    bool success = 1;
+    GreeterList data = 2;
+    Error error = 3;
+}
+
+message UpdateGreeterStatusRequest {
+    int32 id = 1;
+    int32 status = 2;
+}
+
+message UpdateGreeterStatusResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message UpdateGreeterCountRequest {
+    int32 id = 1;
+    int32 num = 2;
+    string column = 3;
+}
+
+message UpdateGreeterCountResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message DeleteGreeterByIdRequest {
+    int32 id = 1;
+}
+
+message DeleteGreeterByIdResponse {
+    bool success = 1;
+    Error error = 2;
+}
+
+message Greeter {
+    int32 id = 1;
+    // @inject_tag: validate:"required,email"
+    string name = 2;
+    int32 view_num = 3;
+    // @inject_tag: validate:"gte=0,lte=3"
+    int32 status = 4;
+    int64 create_time = 5;
+    string create_datetime = 6;
+    string update_datetime = 7;
+}
+
+message GreeterList {
+    int32 total = 1;
+    int32 total_page = 2;
+    int32 cur_page = 3;
+    repeated Greeter datalist = 4;
+}
+
+message GetGreeterListByStreamRequest {
+    int32 index = 1;
+    int32 id = 2;
+}
+
+message GetGreeterListByStreamResponse {
+    int32 index = 1;
+    Greeter result = 2;
+}
+
+message Error {
+    int32 code = 1;
+    string message = 2;
+}

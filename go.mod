@@ -11,11 +11,10 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
-	github.com/imind-lab/micro v0.0.0-20210930155647-5602387874f9
+	github.com/imind-lab/micro v0.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
-	github.com/spiffe/go-spiffe/v2 v2.0.0-beta.8
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/net v0.0.0-20210929193557-e81a3d93ecf6

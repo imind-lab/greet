@@ -11,8 +11,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
+	"github.com/imind-lab/greeter/domain/greeter/service"
 	"github.com/imind-lab/greeter/pkg/constant"
-	"github.com/imind-lab/greeter/server/domain"
 	"github.com/imind-lab/micro/broker"
 	"go.uber.org/zap"
 )
@@ -26,11 +26,11 @@ var GreeterQueue = make(chan SendGreeter, constant.GreeterQueueLen)
 
 type GreeterTask struct {
 	ctx context.Context
-	dm  domain.GreeterDomain
+	dm  service.GreeterDomain
 }
 
 func NewGreeterTask(ctx context.Context) *GreeterTask {
-	dm := domain.NewGreeterDomain()
+	dm := service.NewGreeterDomain()
 	svc := &GreeterTask{ctx: ctx, dm: dm}
 	return svc
 }

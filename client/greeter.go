@@ -9,8 +9,8 @@ package client
 
 import (
 	"context"
-	"github.com/imind-lab/greeter/server/proto/greeter"
-	"github.com/imind-lab/micro/grpcx"
+	"github.com/imind-lab/greeter/application/greeter/proto"
+	"github.com/imind-lab/micro/grpc"
 	"io"
 )
 
@@ -20,7 +20,7 @@ type greeterClient struct {
 }
 
 func NewGreeterClient(ctx context.Context, name string, tls bool) (*greeterClient, error) {
-	conn, closer, err := grpcx.ClientConn(ctx, name, tls)
+	conn, closer, err := grpc.ClientConn(ctx, name, tls)
 	if err != nil {
 		return nil, err
 	}

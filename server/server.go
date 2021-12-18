@@ -2,17 +2,17 @@ package server
 
 import (
 	"fmt"
+	"github.com/imind-lab/greeter/application/greeter/proto"
+	"github.com/imind-lab/greeter/application/greeter/service"
 
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 
 	"github.com/imind-lab/greeter/pkg/constant"
-	"github.com/imind-lab/greeter/server/proto/greeter"
-	"github.com/imind-lab/greeter/server/service"
 	"github.com/imind-lab/greeter/server/subscriber"
 	"github.com/imind-lab/micro"
 	"github.com/imind-lab/micro/broker"
-	"github.com/imind-lab/micro/grpcx"
+	grpcx "github.com/imind-lab/micro/grpc"
 )
 
 func Serve() error {
