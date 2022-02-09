@@ -10,8 +10,6 @@ package service
 import (
 	"context"
 	"fmt"
-	greeter "github.com/imind-lab/greeter/application/greeter/proto"
-	"github.com/imind-lab/greeter/domain/greeter/service"
 	"io"
 	"time"
 
@@ -19,8 +17,11 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"go.uber.org/zap"
 
+	"github.com/imind-lab/greeter/application/greeter/proto"
+	"github.com/imind-lab/greeter/domain/greeter/service"
 	"github.com/imind-lab/greeter/pkg/constant"
 	"github.com/imind-lab/micro/broker"
+	"github.com/imind-lab/micro/status"
 	"github.com/imind-lab/micro/util"
 )
 
@@ -49,8 +50,7 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 
 	rsp := &greeter.CreateGreeterResponse{}
 
-	m := req.Dto
-	fmt.Println("Dto", m)
+	m := req.Data
 	err := svc.vd.Struct(req)
 	if err != nil {
 
@@ -75,20 +75,14 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 	}
 	if m == nil {
 		logger.Error("Greeter不能为空", zap.Any("params", m), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "Greeter不能为空"
-		rsp.Error = err
+		rsp.SetCode(constant.GreeterObjectIsEmpty)
 		return rsp, nil
 	}
 
 	err = svc.vd.Var(m.Name, "required,email")
 	if err != nil {
 		logger.Error("Name不能为空", zap.Any("name", m.Name), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "Name不能为空"
-		rsp.Error = err
+		rsp.SetCode(constant.NameFieldIsEmpty)
 		return rsp, nil
 	}
 	m.CreateTime = util.GetNowWithMillisecond()
@@ -97,10 +91,7 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 	err = svc.dm.CreateGreeter(ctx, m)
 	if err != nil {
 		logger.Error("创建Greeter失败", zap.Any("greeter", m), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "创建Greeter失败"
-		rsp.Error = err
+		rsp.SetCode(constant.CreateGreeterFailed)
 		return rsp, nil
 	}
 
@@ -114,6 +105,7 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 		Body:  []byte(fmt.Sprintf("Greeter %s Created", m.Name)),
 	})
 
+	rsp.SetCode(status.Success)
 	return rsp, nil
 }
 
@@ -126,14 +118,10 @@ func (svc *GreeterService) GetGreeterById(ctx context.Context, req *greeter.GetG
 	m, err := svc.dm.GetGreeterById(ctx, req.Id)
 	if err != nil {
 		logger.Error("获取Greeter失败", zap.Any("greeter", m), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "获取Greeter失败"
-		rsp.Error = err
+		rsp.SetCode(constant.FetchGreeterFailed)
 		return rsp, nil
 	}
-
-	rsp.Dto = m
+	rsp.SetBody(status.Success, m)
 	return rsp, nil
 }
 
@@ -168,10 +156,7 @@ func (svc *GreeterService) GetGreeterList(ctx context.Context, req *greeter.GetG
 	err = svc.vd.Var(req.Status, "gte=0,lte=3")
 	if err != nil {
 		logger.Error("请输入有效的Status", zap.Int32("status", req.Status), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "请输入有效的Status"
-		rsp.Error = err
+		rsp.SetCode(constant.StatusIsInvalid)
 		return rsp, nil
 	}
 
@@ -186,13 +171,10 @@ func (svc *GreeterService) GetGreeterList(ctx context.Context, req *greeter.GetG
 	list, err := svc.dm.GetGreeterList(ctx, req.Status, req.Lastid, req.Pagesize, req.Page)
 	if err != nil {
 		logger.Error("获取Greeter失败", zap.Any("list", list), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "获取GreeterList失败"
-		rsp.Error = err
+		rsp.SetCode(constant.FetchGreeterListFailed)
 		return rsp, nil
 	}
-	rsp.Data = list
+	rsp.SetBody(status.Success, list)
 	return rsp, nil
 }
 
@@ -204,12 +186,10 @@ func (svc *GreeterService) UpdateGreeterStatus(ctx context.Context, req *greeter
 	affected, err := svc.dm.UpdateGreeterStatus(ctx, req.Id, req.Status)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "更新Greeter失败"
-		rsp.Error = err
+		rsp.SetCode(constant.UpdateGreeterFailed)
 		return rsp, nil
 	}
+	rsp.SetCode(status.Success)
 	return rsp, nil
 }
 
@@ -221,10 +201,7 @@ func (svc *GreeterService) UpdateGreeterCount(ctx context.Context, req *greeter.
 	affected, err := svc.dm.UpdateGreeterCount(ctx, req.Id, req.Num, req.Column)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "更新Greeter失败"
-		rsp.Error = err
+		rsp.SetCode(constant.UpdateGreeterFailed)
 		return rsp, nil
 	}
 	endpoint, err := broker.NewBroker(constant.MQName)
@@ -236,7 +213,7 @@ func (svc *GreeterService) UpdateGreeterCount(ctx context.Context, req *greeter.
 		Topic: endpoint.Options().Topics["updategreetercount"],
 		Body:  nil,
 	})
-
+	rsp.SetCode(status.Success)
 	return rsp, nil
 }
 
@@ -248,12 +225,10 @@ func (svc *GreeterService) DeleteGreeterById(ctx context.Context, req *greeter.D
 	affected, err := svc.dm.DeleteGreeterById(ctx, req.Id)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-
-		err := &greeter.Error{}
-		err.Message = "删除Greeter失败"
-		rsp.Error = err
+		rsp.SetCode(constant.DeleteGreeterFailed)
 		return rsp, nil
 	}
+	rsp.SetCode(status.Success)
 	return rsp, nil
 }
 
@@ -293,6 +268,5 @@ func (svc *GreeterService) GetGreeterListByStream(stream greeter.GreeterService_
 				Result: nil,
 			})
 		}
-
 	}
 }

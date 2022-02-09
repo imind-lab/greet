@@ -17,4 +17,4 @@ RUN apk add --no-cache tzdata \
 WORKDIR .
 ADD conf /conf
 COPY --from=builder /go/src/github.com/imind-lab/greeter /go/bin/grpc-health-probe /bin/
-ENTRYPOINT [ "/bin/greeter" ]
+ENTRYPOINT [ "/bin/greeter", "server" ]

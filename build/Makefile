@@ -2,10 +2,11 @@ GOPATH := $(shell go env GOPATH)
 VERSION := 0.0.1.1
 
 gengo:
-	protoc -I. --proto_path ../application/greeter/proto --proto_path ../pkg/proto\
+	protoc -I. --proto_path ../application/greeter/proto --proto_path ../pkg/proto \
  --go_out ../application/greeter/proto --go_opt paths=source_relative --go-grpc_out ../application/greeter/proto --go-grpc_opt paths=source_relative \
  --grpc-gateway_out ../application/greeter/proto --grpc-gateway_opt logtostderr=true --grpc-gateway_opt paths=source_relative --grpc-gateway_opt generate_unbound_methods=false greeter.proto
-	protoc-go-inject-tag -input=../application/greeter/proto/greeter.pb.go
+	@microctl inject --path=../application/greeter/proto/greeter.pb.go
+	@sed -i '' 's/,omitempty//g' ../application/greeter/proto/greeter.pb.go
 
 depend: gengo
 	go get ../...

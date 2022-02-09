@@ -9,16 +9,16 @@ package service
 
 import (
 	"context"
-	"github.com/imind-lab/greeter/application/greeter/proto"
-	"github.com/imind-lab/greeter/domain/greeter/repository"
-	"github.com/imind-lab/greeter/domain/greeter/repository/model"
-	"github.com/imind-lab/greeter/domain/greeter/repository/persistence"
 	"math"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
+	"github.com/imind-lab/greeter/application/greeter/proto"
+	"github.com/imind-lab/greeter/domain/greeter/repository"
+	"github.com/imind-lab/greeter/domain/greeter/repository/model"
+	"github.com/imind-lab/greeter/domain/greeter/repository/persistence"
 	"github.com/imind-lab/micro/dao"
 )
 

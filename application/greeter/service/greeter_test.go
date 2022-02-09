@@ -47,8 +47,7 @@ func (s *Suite) TestGreeterService_GetGreeterById() {
 	}{
 		{"id-100", 100, &greeter.Greeter{Id: 100, Name: "koofox", ViewNum: 0, Status: 0, CreateTime: 0, CreateDatetime: "2021-06-07T08:32:34+08:00", UpdateDatetime: "2021-06-07T08:32:34+08:00"},
 			&greeter.GetGreeterByIdResponse{
-				Success: true,
-				Dto:     &greeter.Greeter{Id: 100, Name: "koofox", ViewNum: 0, Status: 0, CreateTime: 0, CreateDatetime: "2021-06-07T08:32:34+08:00", UpdateDatetime: "2021-06-07T08:32:34+08:00"},
+				Data: &greeter.Greeter{Id: 100, Name: "koofox", ViewNum: 0, Status: 0, CreateTime: 0, CreateDatetime: "2021-06-07T08:32:34+08:00", UpdateDatetime: "2021-06-07T08:32:34+08:00"},
 			},
 		},
 	}
@@ -85,7 +84,6 @@ func (s *Suite) TestGreeterService_GetGreeterList() {
 				},
 			},
 			&greeter.GetGreeterListResponse{
-				Success: true,
 				Data: &greeter.GreeterList{
 					Total:     5,
 					TotalPage: 2,
