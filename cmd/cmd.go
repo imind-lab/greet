@@ -9,7 +9,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "grpc",
-	Short: "Run the gRPC hello-world server",
+	Short: "Run the gRPC Greeter server",
 }
 
 func Execute() {

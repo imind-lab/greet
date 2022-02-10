@@ -1,4 +1,5 @@
 service:
+  namespace: micro
   name: greeter
   port: #监听端口
     http: 80
@@ -7,25 +8,25 @@ service:
     rate: 1
 
 db:
-  logMode: 4
+  logLevel: 4
+  max:
+    open: 100
+    idle: 5
+    life: 30
   imind:
-    write:
+    tablePrefix: tbl
+    master:
       host: 127.0.0.1
       port: 3306
       user: root
-      pass: 123456
+      pass: mind123
       name: mind
-    read:
-      - host: 127.0.0.1
-        port: 3306
-        user: root
-        pass: 123456
-        name: mind
-      - host: 127.0.0.1
-        port: 3306
-        user: root
-        pass: 123456
-        name: mind
+    replica:
+      host: 127.0.0.1
+      port: 3306
+      user: root
+      pass: mind123
+      name: mind
 
 redis:
   addr: '127.0.0.1:6379'
