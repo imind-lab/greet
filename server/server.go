@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-
 	"github.com/imind-lab/greeter/pkg/constant"
 	"github.com/imind-lab/micro"
 	"github.com/imind-lab/micro/broker"

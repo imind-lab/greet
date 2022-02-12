@@ -2,7 +2,7 @@ service:
   namespace: micro
   name: greeter
   port: #监听端口
-    http: 80
+    http: 88
     grpc: 50051
   profile:
     rate: 1
