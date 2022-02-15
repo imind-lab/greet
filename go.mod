@@ -11,7 +11,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
-	github.com/imind-lab/micro v0.0.0-20220208213514-93dc2faaf22e
+	github.com/imind-lab/micro v0.0.0-20220213103335-b4cb8d3d2705
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
