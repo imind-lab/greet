@@ -75,14 +75,14 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 	}
 	if m == nil {
 		logger.Error("Greeter不能为空", zap.Any("params", m), zap.Error(err))
-		rsp.SetCode(constant.GreeterObjectIsEmpty)
+		rsp.SetCode(status.MissingParams, "Greeter不能为空")
 		return rsp, nil
 	}
 
-	err = svc.vd.Var(m.Name, "required,email")
+	err = svc.vd.Var(m.Name, "email")
 	if err != nil {
 		logger.Error("Name不能为空", zap.Any("name", m.Name), zap.Error(err))
-		rsp.SetCode(constant.NameFieldIsEmpty)
+		rsp.SetCode(status.InvalidParams, "Name不能为空")
 		return rsp, nil
 	}
 	m.CreateTime = util.GetNowWithMillisecond()
@@ -91,7 +91,7 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 	err = svc.dm.CreateGreeter(ctx, m)
 	if err != nil {
 		logger.Error("创建Greeter失败", zap.Any("greeter", m), zap.Error(err))
-		rsp.SetCode(constant.CreateGreeterFailed)
+		rsp.SetCode(status.DBSaveFailed, "创建Greeter失败")
 		return rsp, nil
 	}
 
@@ -105,7 +105,7 @@ func (svc *GreeterService) CreateGreeter(ctx context.Context, req *greeter.Creat
 		Body:  []byte(fmt.Sprintf("Greeter %s Created", m.Name)),
 	})
 
-	rsp.SetCode(status.Success)
+	rsp.SetCode(status.Success, "")
 	return rsp, nil
 }
 
@@ -118,7 +118,7 @@ func (svc *GreeterService) GetGreeterById(ctx context.Context, req *greeter.GetG
 	m, err := svc.dm.GetGreeterById(ctx, req.Id)
 	if err != nil {
 		logger.Error("获取Greeter失败", zap.Any("greeter", m), zap.Error(err))
-		rsp.SetCode(constant.FetchGreeterFailed)
+		rsp.SetCode(status.DBQueryFailed, "获取Greeter失败")
 		return rsp, nil
 	}
 	rsp.SetBody(status.Success, m)
@@ -156,7 +156,7 @@ func (svc *GreeterService) GetGreeterList(ctx context.Context, req *greeter.GetG
 	err = svc.vd.Var(req.Status, "gte=0,lte=3")
 	if err != nil {
 		logger.Error("请输入有效的Status", zap.Int32("status", req.Status), zap.Error(err))
-		rsp.SetCode(constant.StatusIsInvalid)
+		rsp.SetCode(status.InvalidParams, "请输入有效的Status")
 		return rsp, nil
 	}
 
@@ -171,7 +171,7 @@ func (svc *GreeterService) GetGreeterList(ctx context.Context, req *greeter.GetG
 	list, err := svc.dm.GetGreeterList(ctx, req.Status, req.Lastid, req.Pagesize, req.Page)
 	if err != nil {
 		logger.Error("获取Greeter失败", zap.Any("list", list), zap.Error(err))
-		rsp.SetCode(constant.FetchGreeterListFailed)
+		rsp.SetCode(status.DBQueryFailed, "获取Greeter失败")
 		return rsp, nil
 	}
 	rsp.SetBody(status.Success, list)
@@ -186,10 +186,10 @@ func (svc *GreeterService) UpdateGreeterStatus(ctx context.Context, req *greeter
 	affected, err := svc.dm.UpdateGreeterStatus(ctx, req.Id, req.Status)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-		rsp.SetCode(constant.UpdateGreeterFailed)
+		rsp.SetCode(status.DBSaveFailed, "更新Greeter失败")
 		return rsp, nil
 	}
-	rsp.SetCode(status.Success)
+	rsp.SetCode(status.Success, "")
 	return rsp, nil
 }
 
@@ -201,7 +201,7 @@ func (svc *GreeterService) UpdateGreeterCount(ctx context.Context, req *greeter.
 	affected, err := svc.dm.UpdateGreeterCount(ctx, req.Id, req.Num, req.Column)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-		rsp.SetCode(constant.UpdateGreeterFailed)
+		rsp.SetCode(status.DBSaveFailed, "更新Greeter失败")
 		return rsp, nil
 	}
 	endpoint, err := broker.NewBroker(constant.MQName)
@@ -213,7 +213,7 @@ func (svc *GreeterService) UpdateGreeterCount(ctx context.Context, req *greeter.
 		Topic: endpoint.Options().Topics["updategreetercount"],
 		Body:  nil,
 	})
-	rsp.SetCode(status.Success)
+	rsp.SetCode(status.Success, "")
 	return rsp, nil
 }
 
@@ -225,10 +225,10 @@ func (svc *GreeterService) DeleteGreeterById(ctx context.Context, req *greeter.D
 	affected, err := svc.dm.DeleteGreeterById(ctx, req.Id)
 	if err != nil || affected <= 0 {
 		logger.Error("更新Greeter失败", zap.Int64("affected", affected), zap.Error(err))
-		rsp.SetCode(constant.DeleteGreeterFailed)
+		rsp.SetCode(status.DBSaveFailed, "更新Greeter失败")
 		return rsp, nil
 	}
-	rsp.SetCode(status.Success)
+	rsp.SetCode(status.Success, "")
 	return rsp, nil
 }
 

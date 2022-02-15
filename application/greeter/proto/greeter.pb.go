@@ -81,9 +81,13 @@ type CreateGreeterResponse struct {
 }
 
 // @inject_response CreateGreeterResponse
-func (x *CreateGreeterResponse) SetCode(code status.Code) {
+func (x *CreateGreeterResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *CreateGreeterResponse) Reset() {
@@ -191,9 +195,13 @@ type GetGreeterByIdResponse struct {
 }
 
 // @inject_response GetGreeterByIdResponse *Greeter data
-func (x *GetGreeterByIdResponse) SetCode(code status.Code) {
+func (x *GetGreeterByIdResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *GetGreeterByIdResponse) SetBody(code status.Code, data *Greeter) {
@@ -340,9 +348,13 @@ type GetGreeterListResponse struct {
 }
 
 // @inject_response GetGreeterListResponse *GreeterList data
-func (x *GetGreeterListResponse) SetCode(code status.Code) {
+func (x *GetGreeterListResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *GetGreeterListResponse) SetBody(code status.Code, data *GreeterList) {
@@ -470,9 +482,13 @@ type UpdateGreeterStatusResponse struct {
 }
 
 // @inject_response UpdateGreeterStatusResponse
-func (x *UpdateGreeterStatusResponse) SetCode(code status.Code) {
+func (x *UpdateGreeterStatusResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *UpdateGreeterStatusResponse) Reset() {
@@ -595,9 +611,13 @@ type UpdateGreeterCountResponse struct {
 }
 
 // @inject_response UpdateGreeterCountResponse
-func (x *UpdateGreeterCountResponse) SetCode(code status.Code) {
+func (x *UpdateGreeterCountResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *UpdateGreeterCountResponse) Reset() {
@@ -704,9 +724,13 @@ type DeleteGreeterByIdResponse struct {
 }
 
 // @inject_response DeleteGreeterByIdResponse
-func (x *DeleteGreeterByIdResponse) SetCode(code status.Code) {
+func (x *DeleteGreeterByIdResponse) SetCode(code status.Code, message string) {
 	x.Code = int32(code)
-	x.Message = code.String()
+	if len(message) == 0 {
+		x.Message = code.String()
+	} else {
+		x.Message = message
+	}
 }
 
 func (x *DeleteGreeterByIdResponse) Reset() {
